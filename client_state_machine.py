@@ -6,6 +6,7 @@ Created on Sun Apr  5 00:00:32 2015
 """
 from chat_utils import *
 
+
 class ClientSM:
     def __init__(self, s):
         self.state = S_OFFLINE
@@ -32,15 +33,15 @@ class ClientSM:
         response = myrecv(self.s)
         if response == (M_CONNECT+'ok'):
             self.peer = peer
-            self.out_msg += 'You are connected with '+ self.peer + '\n'
-            return (True)
+            self.out_msg += 'You are connected with ' + self.peer + '\n'
+            return True
         elif response == (M_CONNECT + 'busy'):
             self.out_msg += 'User is busy. Please try again later\n'
         elif response == (M_CONNECT + 'hey you'):
             self.out_msg += 'Cannot talk to yourself (sick)\n'
         else:
             self.out_msg += 'User is not online, try again later\n'
-        return(False)
+        return False
 
     def disconnect(self):
         msg = M_DISCONNECT
@@ -52,11 +53,11 @@ class ClientSM:
         # message from user is in my_msg, if it has an argument (e.g. "p 3")
         # the the argument is in my_msg[1:]
         self.out_msg = ''
-#==============================================================================
+# ==============================================================================
 # Once logged in, do a few things: get peer listing, connect, search
 # And, of course, if you are so bored, just go
 # This is event handling instate "S_LOGGEDIN"
-#==============================================================================
+# ==============================================================================
         if self.state == S_LOGGEDIN:
             # todo: can't deal with multiple lines yet
             if len(my_msg) > 0:
@@ -71,7 +72,7 @@ class ClientSM:
                     self.out_msg += "Time is: " + time_in
                             
                 elif my_msg == 'who':
-                    pass
+                    self.out_msg += "Who???"
                             
                 elif my_msg[0] == 'c':
                     peer = my_msg[1:]
@@ -93,10 +94,10 @@ class ClientSM:
                 if peer_code == M_CONNECT:
                     pass
                     
-#==============================================================================
+# ==============================================================================
 # Start chatting, 'bye' for quit
 # This is event handling instate "S_CHATTING"
-#==============================================================================
+# ==============================================================================
         elif self.state == S_CHATTING:
             if len(my_msg) > 0:     # my stuff going out
                 mysend(self.s, M_EXCHANGE + "[" + self.me + "] " + my_msg)
@@ -115,9 +116,9 @@ class ClientSM:
             # Display the menu again
             if self.state == S_LOGGEDIN:
                 self.out_msg += menu
-#==============================================================================
+# ==============================================================================
 # invalid state                       
-#==============================================================================
+# ==============================================================================
         else:
             self.out_msg += 'How did you wind up here??\n'
             print_state(self.state)
@@ -133,5 +134,5 @@ B. a group of THREE
 C. no preference
 
 Fill in your A/B/C below
-My selection:
+My selection: A
 """
